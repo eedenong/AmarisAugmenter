@@ -11,6 +11,8 @@ Supports the following augmentations:
 * Pixel Multiplication (colour change)
 * Affine transformations: scale, translate, rotate, shear
 
+Images will automatically be resized to 256 x 256px
+
 #### Use ####
 This script is meant to be used with a web interface _(to be added)_
 
@@ -25,3 +27,4 @@ If augmenting masks, must make sure that the path to the masks are the second pa
 Manual augmentation on multiple batches will result in the chosen augmentations to be applied on __both__ the batches
 
 If you want to manually augment multiple batches differently, augment the batches one by one
+
