@@ -1,5 +1,19 @@
 Amaris Image Augmentation Script V1.0
 ================================
+#### Introduction ####
+Simple script for augmenting images using methods from __imgaug__ library
+Supports the following augmentations:
+> Horizontal and vertical flips
+> Crops
+> Linear Contrast
+> Gaussian Noise addition
+> Gaussian Blur
+> Pixel Multiplication (colour change)
+> Affine transformations: scale, translate, rotate, shear
+
+#### Use ####
+This script is meant to be used with a web interface _(to be added)_
+
 
 #### Limitations ####
 The given path should contain __only__ images in the _.png_ or _.jpeg_ format.
