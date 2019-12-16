@@ -1,11 +1,11 @@
 import augmentation as aug
 import sys
 
-def start(selected_options, imgs):
+def start(selected_options, *paths):
     # takes in options (a dictionary) from the user, and a 4d numpy arr of images, imgs, to be augmented
     # mode is the mode that user selects, either random or manual
     mode = selected_options["mode"]
-    batch = selected_options["batch"]
+
     if mode[0] == "manual":
         # if user chose mode to be manual
         # then options is a list of the chosen augmentation options the user wants
@@ -15,21 +15,25 @@ def start(selected_options, imgs):
                 #if the user somehow doesnt pass in 
                 raise Exception('Please select augmentation options')
             else:
-                return process_images(mode, imgs, options)
+                return process_images(mode, *paths, options)
         except Exception as e:
             print(e)
     else:
-        return process_images(mode, imgs)
- 
+        return process_images(mode, *paths)
 
-def process_images(mode, imgs, *options):
+
+def process_images(mode, *paths, **options):
     random = mode == "random"
-
-    if random and len(options) > 0:
-        #get options, which is a list of options
-        return aug.manual_augment(imgs, options)
+    augment_masks = options[-1] == "yes"
+    # list idx subject to change according to the mask flag
+    # if random, call function for random augmentation
+    if random:
+        if augment_masks:
+            return aug.random_augment(*paths, withmasks=True)
+        else:
+            return aug.random_augment(*paths, withmasks=False)
     else:
         # not random, user has to select options
-        return aug.random_augment(imgs)
-
-
+        # does not matter if user is augmenting masks or not, up to user discretion
+        return aug.manual_augment(*paths, options)
+        
