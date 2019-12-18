@@ -126,7 +126,7 @@ def manual_augment(paths, options):
         # use *paths[0] to return the string of the path
         return manual_augment_single(paths[0], seq)
     
-def manual_augment_mult(path, seqs):  
+def manual_augment_mult(paths, seqs):  
     # get the paths for the images
     imgs_one_path = paths[0]
     imgs_two_path = paths[1]
