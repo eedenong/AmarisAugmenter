@@ -24,7 +24,9 @@ def start(selected_options, *paths):
 
 def process_images(mode, *paths, **options):
     random = mode == "random"
-    augment_masks = options[-1] == "yes"
+    augment_masks = False
+    if len(options) > 0:
+        augment_masks = options[-1] == "yes"
     # list idx subject to change according to the mask flag
     # if random, call function for random augmentation
     if random:
