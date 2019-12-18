@@ -1,0 +1,6 @@
+#pip install -r requirements.txt to run this file
+numpy
+imgaug
+tensorflow
+Pillow
+scipy
