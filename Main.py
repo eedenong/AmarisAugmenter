@@ -1,4 +1,4 @@
-import augmentation as aug
+import augmenter.augmentation as aug
 import sys
 
 def start(selected_options, *paths):
