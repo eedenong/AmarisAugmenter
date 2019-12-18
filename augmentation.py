@@ -47,9 +47,9 @@ augments_dict = {
 # resizes the images to 256 x 256px
 def get_images(path, im_height=256, im_width=256):
     # get directory path for unaugmented images
-    imgs_path = os.path.join(path, "images_unaugmented")
+    #imgs_path = os.path.join(path, "images_unaugmented")
 
-    imgs = os.listdir(imgs_path)
+    imgs = os.listdir(path)
 
     # remove .DS_Store, if it exists in either directory
     if ".DS_Store" in imgs:
@@ -57,16 +57,16 @@ def get_images(path, im_height=256, im_width=256):
 
     # remove directory .ipynb_checkpoints if it exists
     if ".ipynb_checkpoints" in imgs:
-        shutil.rmtree(os.path.join(imgs_path, '.ipynb_checkpoints'))
+        shutil.rmtree(os.path.join(path, '.ipynb_checkpoints'))
 
-    imgs = os.listdir(imgs_path)
+    imgs = os.listdir(path)
 
     # arrays are 4d numpy array of shape (N, height, width, channels)
     im_arr = np.zeros((len(imgs), im_height, im_width, 3), dtype=np.uint8)
 
     for n, id_ in tqdm_notebook(enumerate(imgs), total=len(imgs)):
         # Load images
-        img = load_img(os.path.join(imgs_path, id_))
+        img = load_img(os.path.join(path, id_))
         image = img_to_array(img)
         image = resize(image, (256, 256, 3), mode='constant', preserve_range=True)
 
@@ -75,9 +75,9 @@ def get_images(path, im_height=256, im_width=256):
     return im_arr
 
 # does random augmentations to the images at the given path 
-def random_augment(*paths, withmasks=False):
+def random_augment(paths, withmasks=False):
     #check the length of the paths to see whether is multi or single 
-    multiple = len(*paths) > 1
+    multiple = len(paths) > 1
    
     if multiple:
         # if processing multiple batches
@@ -91,6 +91,7 @@ def random_augment(*paths, withmasks=False):
     else:
         # if processing a single batch, there is only one path, get that path
         # only returns a single array of images
+        # use *paths[0] to return the string of the path
         if withmasks:
             return rand_aug_single_mask(paths[0])
         else:
@@ -98,30 +99,34 @@ def random_augment(*paths, withmasks=False):
 
 ### MANUAL SELECTED AUGMENTATIONS ###
 # takes in the paths and the list of options
-def manual_augment(*paths, options):
+def manual_augment(options, paths):
     #obtain an array of the augments
     aug_arr = []
     for op in options:
-        augment = augments_dict[op]
-        aug_arr.append(augment)
+        if op == "yes" or op == "no":
+            continue
+        else:
+            augment = augments_dict[op]
+            aug_arr.append(augment)
     
     # use the array of augments to generate an augment sequence
     seq = iaa.Sequential(aug_arr)
 
     # check if user wants to augment multiple batches
-    multiple = len(*paths) > 1
+    multiple = len(paths) > 1
     
     if multiple:
         # make sure that the augmentation sequence is deterministic 
         # so that augmentations are same across both batch
         seq = seq.localize_random_state()
         seq = seq.to_deterministic()
-        imgs_one, imgs_two = manual_augment_mult(*paths, seq)
+        imgs_one, imgs_two = manual_augment_mult(seq, *paths)
         return imgs_one, imgs_two
     else:
+        # use *paths[0] to return the string of the path
         return manual_augment_single(paths[0], seq)
     
-def manual_augment_mult(*paths, seq):  
+def manual_augment_mult(seq, paths):  
     # get the paths for the images
     imgs_one_path = paths[0]
     imgs_two_path = paths[1]
@@ -136,7 +141,7 @@ def manual_augment_mult(*paths, seq):
     
     return imgs_one_aug, imgs_two_aug
 
-def manual_augment_single(path, seq):
+def manual_augment_single(seq, path):
     # get the images from the specified path
     imgs = get_images(path)
 
@@ -147,7 +152,7 @@ def manual_augment_single(path, seq):
 
 ### RANDOM AUGMENTATIONS ###
 # random augmentations for multiple batches, one original, one mask
-def rand_aug_mult_wmasks(*paths):
+def rand_aug_mult_wmasks(paths):
     imgs_path = paths[0]
     masks_path = paths[1]
 
@@ -208,11 +213,11 @@ def rand_aug_mult_wmasks(*paths):
 
     imgs_aug = seq_imgs.augment_images(imgs)
     masks_aug = seq_masks.augment_images(masks)
-    
+
     return imgs_aug, masks_aug
 
 # random augmentation for multiple batches of normal images
-def rand_aug_mult(*paths):
+def rand_aug_mult(paths):
     imgs_one_path = paths[0]
     imgs_two_path = paths[1]
 
