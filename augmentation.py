@@ -36,7 +36,7 @@ augments_dict = {
     "Flip Horizontal": iaa.Fliplr(),
     "Flip Vertical": iaa.Flipud(),
     "Blur": iaa.GaussianBlur(sigma=(0.0, 0.5)),
-    "Contrast": iaa.LinearContrast(0.5, 1.25),
+    "Contrast": iaa.LinearContrast(0.5, 1.0),
     "Noise": iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255), per_channel=0.5),
     "Color": iaa.Multiply((0.8, 1.2), per_channel=0.2),
     "Rotate": iaa.Affine(rotate=(-360, 360)), # rotate the image randomly between -360 and 360 degrees
