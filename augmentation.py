@@ -99,7 +99,7 @@ def random_augment(paths, withmasks=False):
 
 ### MANUAL SELECTED AUGMENTATIONS ###
 # takes in the paths and the list of options
-def manual_augment(options, paths):
+def manual_augment(paths, options):
     #obtain an array of the augments
     aug_arr = []
     for op in options:
@@ -126,7 +126,7 @@ def manual_augment(options, paths):
         # use *paths[0] to return the string of the path
         return manual_augment_single(paths[0], seq)
     
-def manual_augment_mult(seq, paths):  
+def manual_augment_mult(path, seqs):  
     # get the paths for the images
     imgs_one_path = paths[0]
     imgs_two_path = paths[1]
@@ -141,7 +141,7 @@ def manual_augment_mult(seq, paths):
     
     return imgs_one_aug, imgs_two_aug
 
-def manual_augment_single(seq, path):
+def manual_augment_single(path, seq):
     # get the images from the specified path
     imgs = get_images(path)
 

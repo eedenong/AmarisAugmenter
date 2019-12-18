@@ -15,11 +15,11 @@ def start(selected_options, paths):
                 #if the user somehow doesnt pass in 
                 raise Exception('Please select augmentation options')
             else:
-                return process_images(mode, *paths, options)
+                return process_images(mode, paths, options)
         except Exception as e:
             print(e)
     else:
-        return process_images(mode, *paths)
+        return process_images(mode, paths)
 
 
 def process_images(mode, paths, options):
