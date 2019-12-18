@@ -6,7 +6,7 @@ def start(selected_options, *paths):
     # mode is the mode that user selects, either random or manual
     mode = selected_options["mode"]
 
-    if mode[0] == "manual":
+    if mode == "manual":
         # if user chose mode to be manual
         # then options is a list of the chosen augmentation options the user wants
         options = selected_options["options"]

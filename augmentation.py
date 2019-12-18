@@ -208,6 +208,8 @@ def rand_aug_mult_wmasks(*paths):
 
     imgs_aug = seq_imgs.augment_images(imgs)
     masks_aug = seq_masks.augment_images(masks)
+    
+    return imgs_aug, masks_aug
 
 # random augmentation for multiple batches of normal images
 def rand_aug_mult(*paths):
