@@ -50,7 +50,7 @@ def get_images(path, im_height=256, im_width=256):
 
     i = 0
     for name in imgs:
-        img = load_img(path + name)
+        img = load_img(os.path.join(path, name))
         image = img_to_array(img)
         image = resize(image, (256, 256, 3), mode='constant', preserve_range=True)
 
