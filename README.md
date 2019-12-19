@@ -23,8 +23,8 @@ Make sure that:
 * If masks are to be augmented, make sure that the directory to the masks folder is the __second__ folder!
 
 To run this script in the command line, uncomment the lines:
-*given_dict = json.loads(sys.argv[1])
-*start(given_dict)
+* given_dict = json.loads(sys.argv[1])
+* start(given_dict)
 
 Then do _python Main.py (dictionary)_ , where dictionary is to be of the format that can be found by
 opening the python REPL and running:
