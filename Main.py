@@ -87,17 +87,20 @@ def process_multiple(folder_list, mode_list, options_list):
 
 def save_single(imgs_arr, save_path, original_path):
     print("Saving images...")
-    orig_dir = os.listdir(original_path[0])
+    save_dir = sorted(os.listdir(save_path))
+    if ".DS_Store" in save_dir:
+        save_dir.remove(".DS_Store")
+
+    orig_dir = sorted(os.listdir(original_path[0]))
     if ".DS_Store" in orig_dir:
         orig_dir.remove('.DS_Store')
 
-    orig_dir = os.listdir(original_path[0]) # removed unwanted file
     for i in range(len(imgs_arr)):
         augmented_img = Image.fromarray(imgs_arr[i], "RGB")
         # obtain original name from the original directory
         original_name = os.path.splitext(orig_dir[i])
         # concat and generate new name
-        new_name = original_name[0] + "_aug_" + str(i) + original_name[1]
+        new_name = original_name[0] + "_augmented" + original_name[1]
         # save the image w the new name to the save path
         augmented_img.save(os.path.join(save_path, new_name))
     print("Save successful")
@@ -114,40 +117,48 @@ def save_multiple(imgs, save_paths, original_paths):
     save_path_first = save_paths[0] # string representing path to the first save destination folder
     save_path_second = save_paths[1] # string representing path to the second save destination folder
 
+    save_dir_1 = sorted(os.listdir(save_path_first))
+    if ".DS_Store" in save_dir_1:
+        save_dir_1.remove(".DS_Store")
+
+    save_dir_2 = sorted(os.listdir(save_path_second))
+    if ".DS_Store" in save_dir_2:
+        save_dir_2.remove(".DS_Store")
+
     orig_path_first = original_paths[0] #string representing the path to the first original folder
     orig_path_second = original_paths[1] #string representing the path to the second original folder
-    # save the first one 
+    # save the first directory 
     print("Saving images for first directory...")
-    orig_dir_first = os.listdir(orig_path_first) # list the items in the directory to
+    orig_dir_first = sorted(os.listdir(orig_path_first)) # list the items in the directory to
     if ".DS_Store" in orig_dir_first:
         orig_dir_first.remove('.DS_Store')
 
-    orig_dir_first = os.listdir(orig_path_first) # get the list of the original names
+
     for i in range(len(imgs_first)):
         augmented_img = Image.fromarray(imgs_first[i], "RGB")
         # get the original name from the directory
         original_name = os.path.splitext(orig_dir_first[i])
         # concat and generate new name
-        new_name = original_name[0] + "_aug_" + str(i) + original_name[1]
+        new_name = original_name[0] + "_augmented" + original_name[1]
         # save to the save path
         augmented_img.save(os.path.join(save_path_first, new_name))
     print("Save successful for first")
 
-    # save for first directory
+    # save for second directory
     print("Saving images for second directory...")
-    orig_dir_second = os.listdir(orig_path_second)
+    orig_dir_second = sorted(os.listdir(orig_path_second))
     if ".DS_Store" in orig_dir_second:
         orig_dir_second.remove('.DS_Store')
 
-    orig_dir_second = os.listdir(orig_path_second)
     for i in range(len(imgs_second)):
         augmented_img = Image.fromarray(imgs_second[i], "RGB")
+        # get the original name from the directory list
         original_name = os.path.splitext(orig_dir_second[i])
-        new_name = original_name[0] + "_aug_" + str(i) + original_name[1]
+        new_name = original_name[0] + "_augmented" + original_name[1]
         augmented_img.save(os.path.join(save_path_second, new_name))
     print("Save successful for second")
 
 
 # lines below were used for testing
-#given_dict = json.loads(sys.argv[1])
-#start(given_dict)
+given_dict = json.loads(sys.argv[1])
+start(given_dict)

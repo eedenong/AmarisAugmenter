@@ -38,5 +38,5 @@ Manual augmentation on multiple batches will result in the chosen augmentations 
 If you want to manually augment multiple batches differently, augment the batches one by one
 
 #### Current Bugs to be fixed ####
-- [ ] Files are not being saved in the correct order
-- [ ] Augmentation does not work for __manual__ augments with __multiple__ batches
+- [x] Files are not being saved in the correct order
+- [x] Augmentation does not work for __manual__ augments with __multiple__ batches

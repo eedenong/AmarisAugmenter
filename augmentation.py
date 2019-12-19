@@ -24,14 +24,14 @@ from PIL import Image
 
 SEED_MAX = 1000
 augments_dict = {
-    "Flip Horizontal": iaa.Fliplr(0.5),
-    "Flip Vertical": iaa.Flipud(0.5),
-    "Blur": iaa.GaussianBlur(sigma=(0.0, 0.5)),
-    "Contrast": iaa.LinearContrast(0.5, 1.0),
-    "Noise": iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255), per_channel=0.5),
-    "Color": iaa.Multiply((0.8, 1.2), per_channel=0.2),
-    "Rotate": iaa.Affine(rotate=(-360, 360), mode="constant"), # rotate the image randomly between -360 and 360 degrees
-    "Shear": iaa.Affine(shear=(-45, 45), mode="constant"), # shear the image between -45 and 45 degrees
+    "Flip Horizontal": iaa.Fliplr(1.0), #OK
+    "Flip Vertical": iaa.Flipud(1.0), #OK
+    "Blur": iaa.GaussianBlur(sigma=(0.5, 1.0)), #OK
+    "Contrast": iaa.LinearContrast(0.5, 1.0), #OK
+    "Noise": iaa.AdditiveGaussianNoise(loc=0, scale=(0.1, 0.05*255), per_channel=True), #OK
+    "Color": iaa.Multiply((0.8, 1.2), per_channel=True),
+    "Rotate": iaa.Affine(rotate=(-30, 30), mode="constant"), # rotate the image randomly between -360 and 360 degrees
+    "Shear": iaa.Affine(shear=(-20, 20), mode="constant"), # shear the image between -45 and 45 degrees
     "Scale": iaa.Affine(scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, mode="constant") # random scaling from 80% to 120% of original size
 }  
 # this method takes in the path of the directory containing images and their respective masks, and returns a 4d array with their respective values
@@ -40,17 +40,10 @@ def get_images(path, im_height=256, im_width=256):
     # get directory path for unaugmented images
     #imgs_path = os.path.join(path, "images_unaugmented")
     print("Getting images from " + path)
-    imgs = os.listdir(path)
-
-    # remove .DS_Store, if it exists in either directory
-    if ".DS_Store" in imgs:
-        imgs.remove('.DS_Store')
-
-    # remove directory .ipynb_checkpoints if it exists
-    if ".ipynb_checkpoints" in imgs:
-        shutil.rmtree(os.path.join(path, '.ipynb_checkpoints'))
-
-    imgs = os.listdir(path)
+    imgs = sorted(os.listdir(path))
+    # remove .DS_Store, if it exists in directory
+    if '.DS_Store' in imgs:
+        imgs.remove('.DS_Store')    
     imgs.sort()
     # arrays are 4d numpy array of shape (N, height, width, channels)
     im_arr = np.zeros((len(imgs), im_height, im_width, 3), dtype=np.uint8)
@@ -75,42 +68,50 @@ def get_images(path, im_height=256, im_width=256):
 # TESTED OK
 def single_random(path):
     # Get images from specified path, as a 4D numpy array
-    print("starting SINGLE batch RANDOM augment")
+    print("Starting SINGLE batch RANDOM augment")
     imgs_arr = get_images(path)
     aug_seq = gen_random_augment()
     imgs_aug = aug_seq.augment_images(imgs_arr)
-    str = "successfully augmented img_arr. Final aug shape is {}"
-    print(str.format(imgs_aug.shape))
+
+    print("Successfully augmented img_arr with RANDOM augments")
+
     return imgs_aug
 
 # TESTED OK
 def single_manual(path, options):
-    print("starting SINGLE batch MANUAL augment")
+    print("Starting SINGLE batch MANUAL augment")
     imgs_arr = get_images(path)
     aug_seq = gen_manual_augment(options)
     imgs_aug = aug_seq.augment_images(imgs_arr)
+
+    print("Successfully augmented img_arr with MANUAL augments {}".format(options))
+
     return imgs_aug
 #################################
 #   MULTI BATCH AUGMENTATION    #
 #################################
 def multiple_random(folder_list):
-    print("starting MULTIPLE batch RANDOM augment")
+    print("Starting MULTIPLE batch RANDOM augment")
     imgs_arr_1 = get_images(folder_list[0])
     imgs_arr_2 = get_images(folder_list[1])
     aug_seq = gen_random_augment()
     #aug_seq_2 = iaa.meta.copy_random_state(aug_seq_1)
     imgs_aug_1 = aug_seq.augment_images(imgs_arr_1)
     imgs_aug_2 = aug_seq.augment_images(imgs_arr_2)
+
+    print("Successfully augmented imgs_arr_1 and imgs_arr_2 with RANDOM augments")
+
     return imgs_aug_1, imgs_aug_2
 
 def multiple_manual(folder_list, options_list):
-    print("starting MULTIPLE batch MANUAL augment")
+    print("Starting MULTIPLE batch MANUAL augment")
     imgs_arr_1 = get_images(folder_list[0])
     imgs_arr_2 = get_images(folder_list[1])
     aug_seq = gen_manual_augment(options_list)
     #aug_seq_2 = iaa.meta.copy_random_state(aug_seq_1)
     imgs_aug_1 = aug_seq.augment_images(imgs_arr_1)
     imgs_aug_2 = aug_seq.augment_images(imgs_arr_2)
+    print("Successfully augmented imgs_arr_1 and imgs_arr_2 with MANUAL augments: {}".format(options_list))
     return imgs_aug_1, imgs_aug_2
 #####################################
 #   AUGMENTATION HELPER FUNCTIONS   #
@@ -148,9 +149,9 @@ def gen_random_augment():
             # Scale/zoom them, translate/move them, rotate them and shear them.
             iaa.Affine(
                 scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, # random scaling from 80% to 120% of original size
-                translate_percent={"x": (0.0, 0.2), "y": (0.0, 0.2)},# translation from 0 translation to 20% of axis size
-                rotate=(-360, 360), # rotate the image randomly between -360 and 360 degrees
-                shear=(-45, 45),
+                translate_percent={"x": (0.0, 0.1), "y": (0.0, 0.1)},# translation from 0 translation to 20% of axis size
+                rotate=(-30, 30), # rotate the image randomly between -360 and 360 degrees
+                shear=(-20, 20),
                 cval=255,#set cval to 255 to prevent any black areas occuring 
                 mode='constant')
         ], random_order=True) # apply augmenters in random order
@@ -158,7 +159,9 @@ def gen_random_augment():
     seq_i = seq.localize_random_state()
     seq_img = seq_i.to_deterministic()
     print("Random augment sequence generated")
-    print(seq_img)
+    print("=================================================")
+    # print(seq_img)
+    # print("=================================================")
     return seq_img
 
 def gen_manual_augment(options):
@@ -176,6 +179,8 @@ def gen_manual_augment(options):
     seq_img = seq_i.to_deterministic()
 
     print("Manual augment generated")
-    print(seq_img)
+    print("=================================================")
+    # print(seq_img)
+    # print("=================================================")
     return seq_img
 
