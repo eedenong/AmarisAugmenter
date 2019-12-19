@@ -2,6 +2,9 @@ Amaris Image Augmentation Script V1.0
 ================================
 #### Introduction ####
 Simple script for augmenting images using methods from __imgaug__ library
+
+Supports single batch augmentation of images (for original image dataset augmentation), or multiple batch augmentation of images (to augment original images and their masks at the same time)
+
 Supports the following augmentations:
 * Horizontal and vertical flips
 * Crops
@@ -14,8 +17,11 @@ Supports the following augmentations:
 Images will automatically be resized to 256 x 256px 
 
 #### Use ####
-This script is originally meant to be used with a web interface _(to be added)_
-Make sure __Main.py__ and __augmentation.py__ are in the same directory before running
+Make sure that:
+1. __Main.py__ and __augmentation.py__ are in the same directory before running
+2. The folders containing the images to be augmented __ONLY__ have images (no sub-folders)
+* If masks are to be augmented, make sure that the directory to the masks folder is the __second__ folder!
+
 To run this script in the command line, uncomment the lines:
 *given_dict = json.loads(sys.argv[1])
 *start(given_dict)
@@ -24,6 +30,7 @@ Then do _python Main.py (dictionary)_ , where dictionary is to be of the format 
 opening the python REPL and running:
 1. import Main
 2. help(Main)
+
 
 
 #### Limitations ####

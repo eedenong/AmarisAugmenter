@@ -80,10 +80,12 @@ def process_multiple(folder_list, mode_list, options_list):
     mode = mode_list[0]
     if mode == "Random":
         print("processing multiple batch (RANDOM)")
-        return aug.multiple_random(folder_list)
+        #return aug.multiple_random(folder_list)
+        return aug.multiple_random_mask(folder_list)
     else: 
         print("processing multiple batch (MANUAL)")
-        return aug.multiple_manual(folder_list, options_list)
+        #return aug.multiple_manual(folder_list, options_list)
+        return aug.multiple_manual_mask(folder_list, options_list)
 
 def save_single(imgs_arr, save_path, original_path):
     print("Saving images...")
